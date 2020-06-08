@@ -483,27 +483,17 @@ class Interpreter:
         if sign == '^':
             return one ** two
 
-    @staticmethod
-    def is_digit(item: str):
-        if item[0] == '0':
-            if len(item) != 1:
-                return False
-            return True
-        for el in item:
-            if el not in '1234567890':
-                return False
-        return True
-
-    def get_expression_result(self):
+        def get_expression_result(self):
         result_stack: list = []
 
         while self.rpn_stack:
             item = self.rpn_stack.popleft()
-            if self.is_digit(item):
-                result_stack.append(item)
-            else:
+            try:
+                result_stack.append(int(item))
+            except ValueError:
                 second, first = result_stack.pop(), result_stack.pop()
                 result_stack.append(self.calculate_this(first, second, item))
+
         return result_stack[0]
 
     def assignment_handler(self):
